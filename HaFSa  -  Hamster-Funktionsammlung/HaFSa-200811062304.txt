@@ -1,0 +1,1022 @@
+/******************************************************************************/
+/*                                                                            */
+/*                HAMSTER - FUNKTIONSSAMMMLUNG ( H a F S a )                  */
+/*            ===================================================             */
+/*                                                                            */
+/*            C:200810292221                       V:200811062304             */
+/*                                                                            */
+/*                     Entwickelt & Zusammengestellt von                      */
+/*                   Michael Johne <michael-johne@gmx.de>                     */
+/*                                                                            */
+/*     Sammlung von nützlichen Funktionen und Prozeduren für die HAMSTER-     */
+/*     Programmierung; basierend auf einer Idee nach Dietrich Boles' Buch     */
+/*     "Programmieren spielend gelernt - mit dem Java-Hamster-Modell" in      */
+/*     der 4. überarbeiteten Auflage 2008; ISBN 978-3-8351-0194-4             */
+/*     B.G. Teubner Verlag / GWV Fachverlage GmbH, Wiesbaden 2006             */
+/*                                                                            */
+/******************************************************************************/
+
+
+/*
+ * setzt den Hamster einen Schritt vor,
+ * sofern das Feld davor frei ist
+ */
+void sicheresVor()
+{
+  if (vornFrei()) vor();
+}
+
+
+/*
+ * der Hamster nimmt ein Korn,
+ * sofern ein Korn auf der Kachel liegt
+ */
+void sicheresNimm()
+{
+  if (kornDa()) nimm();
+}
+
+
+/*
+ * der Hamster legt ein Korn ab,
+ * sofern der mindestens ein Korn im Maul besitzt
+ */
+void sicheresGib()
+{
+  if (!maulLeer()) gib();
+}
+
+
+/*
+ * der Hamster dreht sich um
+ */
+void kehrt()
+{
+  linksUm();
+  linksUm();
+}
+
+
+/*
+ * der Hamster dreht sich nach rechts
+ */
+void rechtsUm()
+{
+  kehrt();
+  linksUm();
+}
+
+
+/*
+ * der Hamster macht eine Linkswendung, d. h.
+ * er dreht sich nach links und versetzt sich 
+ * eine Reihe zur linken Richtung
+ * (von der Blickrichtung des Hamsters)
+ */
+void linksWenden()
+{
+  sicheresVor();
+  linksUm();
+  sicheresVor();
+  linksUm();
+  sicheresVor();
+}
+
+
+/*
+ * der Hamster macht eine Rechtswendung, d. h.
+ * er dreht sich nach rechts und versetzt sich 
+ * eine Reihe zur rechten Richtung
+ * (von der Blickrichtung des Hamsters)
+ */
+void rechtsWenden()
+{
+  sicheresVor();
+  rechtsUm();
+  sicheresVor();
+  rechtsUm();
+  sicheresVor();
+}
+
+
+/*
+ * der Hamster geht eine bestimmte Anzahl an Schritten vor;
+ * sofern keine Mauer auf der Kachel ist
+ */
+void felderVor(int anzahl)
+{
+  while ((anzahl > 0) && vornFrei())
+  {
+    vor();
+    anzahl--;
+  }
+}
+
+
+/*
+ * der Hamster dreht sich um und geht
+ * eine bestimmte Anzahl an Schritten vor
+ */
+void felderZurueck(int anzahl)
+{
+  kehrt();
+  felderVor(anzahl);
+}
+
+
+/*
+ * der Hamster dreht sich nach links und 
+ * geht eine bestimmte Anzahl an Schritten vor
+ */
+void felderLinks(int anzahl)
+{
+  linksUm();
+  felderVor(anzahl);
+}
+
+
+/*
+ * der Hamster dreht sich nach rechts und 
+ * geht eine bestimmte Anzahl an Schritten vor
+ */
+void felderRechts(int anzahl)
+{
+  rechtsUm();
+  felderVor(anzahl);
+}
+
+
+/*
+ * der Hamster dreht sich in einem 
+ * bestimmten Winkel (in Grad) nach links
+ */
+void drehDich(int grad)
+{
+  int anzahlDrehungen = grad / 90;
+  while (anzahlDrehungen > 0)
+  {
+    linksUm();
+    anzahlDrehungen--;
+  }
+}
+
+
+/*
+ * liefert true,
+ * falls eine Mauer vor dem Hamster ist
+ */
+boolean mauerDa()
+{
+  return !vornFrei();
+}
+
+
+/*
+ * der Hamster läuft vor,
+ * bis er auf eine Mauer trifft
+ */
+void laufeBisZurWand()
+{
+  while (!mauerDa()) vor();
+}
+
+
+/*
+ * liefert die Anzahl der Schritte,
+ * wenn der Hamster vor läuft und
+ * bis er auf eine Mauer trifft
+ */
+int laufeBisZurWandUndZaehleSchritte()
+{
+  int schritte = 0;
+  while (!mauerDa()) 
+  {
+    vor();
+    schritte++;
+  }
+  return schritte;
+}
+
+
+/*
+ * der Hamster begibt sich in nächste Ecke, 
+ * die sich links vom Sichtfeld des Hamster befindet
+ * und mit der Blickrichtung nach links
+ */
+void begibDichInDieLinkeEcke()
+{
+  if (hintenFrei2() && rechtsFrei2())
+  {
+    laufeBisZurWand();
+    linksUm();
+  }
+  laufeBisZurWand();
+  linksUm();
+}
+
+
+/*
+ * der Hamster begibt sich in nächste Ecke, 
+ * die sich rechts vom Sichtfeld des Hamster befindet
+ * und mit der Blickrichtung nach rechts
+ */
+void begibDichInDieRechteEcke()
+{
+  if (hintenFrei2() && linksFrei2())
+  {
+    laufeBisZurWand();
+    RechtsUm();
+  }
+  laufeBisZurWand();
+  RechtsUm();
+}
+
+
+/*
+ * liefert die Anzahl der Schritte, wenn
+ * sich der Hamster sich in nächste Ecke begibt
+ * die sich links vom Sichtfeld des Hamster befindet
+ * und mit der Blickrichtung nach links
+ */
+int begibDichInDieLinkeEckeUndZaehleSchritte()
+{
+  int schritte = 0;
+  schritte = schritte + laufeBisZurWandUndZaehleSchritte();
+  linksUm();
+  schritte = schritte + laufeBisZurWandUndZaehleSchritte();
+  linksUm();
+  return schritte;
+}
+
+
+/*
+ * liefert die Anzahl der Schritte, wenn
+ * sich der Hamster sich in nächste Ecke begibt
+ * die sich rechts vom Sichtfeld des Hamster befindet
+ * und mit der Blickrichtung nach rechts
+ */
+int begibDichInDieRechteEckeUndZaehleSchritte()
+{
+  int schritte = 0;
+  schritte = schritte + laufeBisZurWandUndZaehleSchritte();
+  linksUm();
+  schritte = schritte + laufeBisZurWandUndZaehleSchritte();
+  linksUm();
+  return schritte;
+}
+
+
+/*
+ * der Hamster sammelt alle Körner,
+ * die er auf der Kachel findet, wo er steht
+ */
+void nimmAlleKoerner()
+{
+  while (kornDa())
+  {
+    nimm();
+  }
+}
+
+
+/*
+ * der Hamster sammelt alle Körner,
+ * die er in einer Reihe vor sich findet
+ */
+void ernteReihe()
+{
+  while (vornFrei())
+  {
+    vor();
+    nimmAlleKoerner()
+  }
+}
+
+
+/*
+ * liefert die Anzahl der Schritte,
+ * wenn der Hamster alle Körner sammelt,
+ * die er in einer Reihe befinden,
+ * auf der er blickt
+ */
+int ernteReiheUndZaehleSchritte()
+{
+  int schritte = 0;
+  while (vornFrei())
+  {
+    vor();
+    schritte++;
+    nimmAlleKoerner()
+  }
+  return schritte;
+}
+
+
+/*
+ * liefert die Anzahl der Schritte 
+ * bis zum nächsten Hindernis, indem
+ * der Hamster bis zum Hindernis läuft
+ * und wieder zurück
+ */
+int bestimmeLaenge()
+{
+  int laenge = 1;
+  while (vornFrei())
+  {
+    vor();
+    laenge++;
+  }
+  // und zurück (zur Vermeidung von Seiteneffekten)
+  int zurueck = laenge;
+  kehrt();
+  while (zurueck > 1)
+  {
+    vor();
+    zurueck--;
+  }
+  kehrt();
+  return laenge;
+}
+
+
+/*
+ * liefert true, wenn auf der Kachel vor dem Hamster
+ * ein Korn liegt
+ */
+boolean vornKorn()
+{
+  if (!vornFrei())
+  {
+    return false;
+  }
+  vor();
+  boolean kornGefunden = kornDa();
+  kehrt();
+  vor();
+  kehrt();
+  return kornGefunden;
+}
+
+
+/*
+ * liefert true, wenn auf der Kachel links des Hamsters
+ * ein Korn liegt
+ */
+boolean linksKorn()
+{
+  linksUm();
+  boolean kornGefunden = vornKorn();
+  rechtsUm();
+  return kornGefunden;
+}
+
+
+/*
+ * liefert true, wenn auf der Kachel rechts des Hamsters
+ * ein Korn liegt
+ */
+boolean rechtsKorn()
+{
+  rechtsUm();
+  boolean kornGefunden = vornKorn();
+  linksUm();
+  return kornGefunden;
+}
+
+
+/*
+ * liefert true, wenn auf der Kachel hinter dem Hamster
+ * ein Korn liegt
+ */
+boolean hintenKorn()
+{
+  kehrt();
+  boolean kornGefunden = vornKorn();
+  kehrt();
+  return kornGefunden;
+}
+
+
+/*
+ * Hamster läuft eine diagonale Linie,
+ * bis er auf ein Hindernis trifft.
+ * Zuerst dreht er sich links und nach jedem
+ * 2. Schritt rechts
+ */
+void laufeDiagonalLinksRechtsBisWand()
+{
+  while (vornFrei())
+  {
+    vor();
+    linksUm();
+    if (vornFrei())
+    {
+      vor();
+      rechtsUm();
+    }
+  }
+}
+
+
+/*
+ * Hamster läuft eine diagonale Linie,
+ * bis er auf ein Hindernis trifft.
+ * Zuerst dreht er sich rechts und nach jedem
+ * 2. Schritt links
+ */
+void laufeDiagonalRechtsLinksBisWand()
+{
+  while (vornFrei())
+  {
+    vor();
+    linksUm();
+    if (vornFrei())
+    {
+      vor();
+      rechtsUm();
+    }
+  }
+}
+
+
+
+
+/*
+ * Hamster läuft eine diagonale Linie,
+ * bis er auf ein Hindernis trifft.
+ * Zuerst dreht er sich links und nach jedem
+ * 2. Schritt rechts.
+ * Er zählt dabei seine Schritte.
+ */
+int laufeDiagonalLinksRechtsBisWandUndZaehleSchritte()
+{
+  int schritte = 0;
+  while (vornFrei())
+  {
+    vor();
+    schritte++;
+    linksUm();
+    if (vornFrei())
+    {
+      schritte++;
+      vor();
+      rechtsUm();
+    }
+  }
+  return schritte;
+}
+
+
+/*
+ * Hamster läuft eine diagonale Linie,
+ * bis er auf ein Hindernis trifft.
+ * Zuerst dreht er sich rechts und nach jedem
+ * 2. Schritt links.
+ * Er zählt dabei seine Schritte.
+ */
+int laufeDiagonalRechtsLinksBisWandUndZaehleSchritte()
+{
+  int schritte = 0;
+  while (vornFrei())
+  {
+    vor();
+    schritte++;
+    linksUm();
+    if (vornFrei())
+    {
+      vor();
+      schritte++;
+      rechtsUm();
+    }
+  }
+  return schritte;
+}
+
+
+/*
+ * Hamster läuft eine diagonale Linie,
+ * bis er auf ein Korn trifft.
+ * Zuerst dreht er sich links und nach jedem
+ * 2. Schritt rechts
+ */
+void laufeDiagonalLinksRechtsBisKorn()
+{
+  while (!kornDa())
+  {
+    vor();
+    linksUm();
+    if (!kornDa())
+    {
+      vor();
+      rechtsUm();
+    }
+  }
+}
+
+
+/*
+ * Hamster läuft eine diagonale Linie,
+ * bis er auf ein Korn trifft.
+ * Zuerst dreht er sich rechts und nach jedem
+ * 2. Schritt links
+ */
+void laufeDiagonalRechtsLinksBisKorn()
+{
+  while (!kornDa())
+  {
+    vor();
+    linksUm();
+    if (!kornDa())
+    {
+      vor();
+      rechtsUm();
+    }
+  }
+}
+
+
+/*
+ * Hamster läuft eine diagonale Linie,
+ * bis er auf ein Korn trifft.
+ * Zuerst dreht er sich links und nach jedem
+ * 2. Schritt rechts.
+ * Er zählt dabei seine Schritte.
+ */
+int laufeDiagonalLinksRechtsBisKornUndZaehleSchritte()
+{
+  int schritte = 0;
+  while (!kornDa())
+  {
+    vor();
+    schritte++;
+    linksUm();
+    if (!kornDa())
+    {
+      vor();
+      schritte++;
+      rechtsUm();
+    }
+  }
+  return schritte;
+}
+
+
+/*
+ * Hamster läuft eine diagonale Linie,
+ * bis er auf ein Korn trifft.
+ * Zuerst dreht er sich rechts und nach jedem
+ * 2. Schritt links.
+ * Er zählt dabei seine Schritte.
+ */
+int laufeDiagonalRechtsLinksBisKornUndZaehleSchritte()
+{
+  int schritte = 0;
+  while (!kornDa())
+  {
+    vor();
+    schritte++;
+    linksUm();
+    if (!kornDa())
+    {
+      vor();
+      schritte++;
+      rechtsUm();
+    }
+  }
+  return schritte;
+}
+
+
+/*
+ * der Hamster läuft solange vor, bis er
+ * auf ein Hindernis oder auf ein Korn trifft
+ */
+void sucheKorn()
+{
+  while (!kornDa() && vornFrei()) vor();
+}
+
+
+/*
+ * liefert die Anzahl der Schritte, wenn
+ * der Hamster solange vorläuft, bis er
+ * auf ein Hindernis oder auf ein Korn trifft
+ */
+int sucheKornUndZaehleSchritte()
+{
+  int schritte = 0;
+  while (!kornDa() && vornFrei()) 
+  {
+    vor();
+    schritte++;
+  }
+  return schritte;
+}
+
+
+/*
+ * der Hamster läuft solange vor, bis er
+ * auf ein Hindernis oder auf ein Korn trifft,
+ * dann nimmt der Hamster das Korn auf
+ */
+void sucheKornUndNimm()
+{
+  while (!kornDa() && vornFrei()) vor();
+  sicheresNimm();
+}
+
+
+/*
+ * liefert die Anzahl der Schritte, wenn
+ * der Hamster solange vorlï¿½uft, bis er
+ * auf ein Hindernis oder auf ein Korn trifft,
+ * dann nimmt der Hamster das Korn auf
+ */
+int sucheKornUndNimmUndZaehleSchritte()
+{
+  int schritte = 0;
+  while (!kornDa() && vornFrei())
+  {
+    vor();
+    schritte++;
+  }
+  sicheresNimm();
+  return schritte;
+}
+
+
+/*
+ * der Hamster läuft solange vor, bis er
+ * auf ein Hindernis oder auf mindestens ein Korn trifft,
+ * dann nimmt der Hamster alle Körner der Kachel auf
+ */
+void sucheKoernerUndNimm()
+{
+  while (!kornDa() && vornFrei()) vor();
+  nimmAlleKoerner();
+}
+
+
+/*
+ * liefert die Anzahl der Schritte, wenn
+ * der Hamster solange vorläuft, bis er
+ * auf mindestens ein Hindernis oder auf ein Korn trifft,
+ * dann nimmt der Hamster alle Körner der Kachel auf
+ */
+int sucheKoernerUndNimmUndZaehleSchritte()
+{
+  int schritte = 0;
+  while (!kornDa() && vornFrei())
+  {
+    vor();
+    schritte++;
+  }
+  nimmAlleKoerner();
+  return schritte;
+}
+
+
+/*
+ * liefert die Anzahl der Körner auf der Kachel,
+ * auf der sich der Hamster befindet
+ */
+int zaehleAlleKoernerAufKachel()
+{
+  int koerner = 0;
+  while (kornDa())
+  {
+    nimm();
+    koerner++;
+  }
+  int anzahl = koerner;
+  while (anzahl > 0)
+  {
+    gib();
+    anzahl--;
+  }
+  return koerner;
+}
+
+
+/*
+ * liefert die Anzahl der Körner im Maul,
+ * die der Hamster besitzt
+ */
+int zaehleAlleKoernerImMaul()
+{
+  int koerner = 0;
+  while (!maulLeer())
+  {
+    gib();
+    koerner++;
+  }
+  int anzahl = koerner;
+  while (anzahl > 0)
+  {
+    nimm();
+    anzahl--;
+  }
+  return koerner;
+}
+
+
+/*
+ * liefert true,
+ * falls die Kachel links frei ist;
+ * Variante ohne Variablen
+ */
+boolean linksFrei()
+{
+  linksUm();
+  if (vornFrei())
+  {
+    // links ist frei
+    rechtsUm();
+    return true;
+  } else {
+    // links ist eine Mauer
+    rechtsUm();
+    return false;
+  }
+}
+
+
+/*
+ * liefert true,
+ * falls die Kachel links frei ist;
+ * Variante mit Variablen
+ */
+boolean linksFrei2()
+{
+  linksUm();
+  boolean istFrei = vornFrei();
+  rechtsUm();
+  return istFrei;
+}
+
+
+/*
+ * liefert true,
+ * falls die Kachel rechts frei ist;
+ * Variante ohne Variablen
+ */
+boolean rechtsFrei()
+{
+  rechtsUm();
+  if (vornFrei())
+  {
+    // rechts ist frei
+    linksUm();
+    return true;
+  } else {
+    // rechts ist eine Mauer
+    linksUm();
+    return false;
+  }
+}
+
+
+/*
+ * liefert true,
+ * falls die Kachel rechts frei ist;
+ * Variante mit Variablen
+ */
+boolean rechtsFrei2()
+{
+  rechtsUm();
+  boolean istFrei = vornFrei();
+  linksUm();
+  return istFrei;
+}
+
+
+/*
+ * liefert true,
+ * falls die Kachel links und rechts frei ist;
+ */
+boolean linksUndRechtsFrei()
+{
+  return linksFrei() && rechtsFrei();
+}
+
+
+/*
+ * liefert true,
+ * falls die Kachel links oder rechts frei ist;
+ * aber nicht beide Kachel gleichzeitig frei
+ */
+boolean entwederLinksOderRechtsFrei()
+{
+  linksUm();
+  boolean linksFrei = vornFrei();
+  kehrt();
+  boolean rechtsFrei = vornFrei();
+  linksUm();
+  return !(linksFrei && rechtsFrei) && (linksFrei || rechtsFrei);
+}
+
+
+/*
+ * liefert true,
+ * falls die Kachel hinten frei ist;
+ * Variante ohne Variablen
+ */
+boolean hintenFrei()
+{
+  kehrt();
+  if (vornFrei())
+  {
+    kehrt();
+    return true;
+  } else {
+    kehrt();
+    return false;
+  }
+}
+
+
+/*
+ * liefert true,
+ * falls die Kachel hinten frei ist;
+ * Variante mit Variablen
+ */
+boolean hintenFrei2()
+{
+  kehrt();
+  boolean istFrei = vornFrei();
+  kehrt();
+  return istFrei;
+}
+
+
+/*
+ * liefert true,
+ * falls alle Kacheln ringsherum frei sind
+ */
+boolean allesFrei()
+{
+  boolean istFrei = vornFrei();
+  linksUm();
+  istFrei = istFrei && vornFrei(); // links frei?
+  linksUm();
+  istFrei = istFrei && vornFrei(); // hinten frei?
+  linksUm();
+  istFrei = istFrei && vornFrei(); // rechts frei?
+  linksUm();
+  return istFrei;
+}
+
+
+/*
+ * liefert true,
+ * falls sich eine Mauer neben dem Hamster befindet
+ */
+boolean genauEineMauerNebenan()
+{
+  boolean vornMauer = !vornFrei();
+  linksUm();
+  boolean linksMauer = !vornFrei();
+  linksUm();
+  boolean hintenMauer = !vornFrei();
+  linksUm();
+  boolean rechtsMauer = !vornFrei();
+  linksUm();
+  return
+    vornMauer   && !(hintenMauer || rechtsMauer || linksMauer) ||
+    linksMauer  && !(hintenMauer || rechtsMauer || vornMauer)  ||
+    hintenMauer && !(vornMauer   || rechtsMauer || linksMauer) ||
+    rechtsMauer && !(hintenMauer || vornMauer   || linksMauer);
+}
+
+
+/*
+ * liefert true,
+ * falls sich eine Mauer links vom Hamster befindet
+ */
+boolean linksMauer()
+{
+  return !linksFrei();
+}
+
+
+/*
+ * liefert true,
+ * falls sich eine Mauer rechts vom Hamster befindet
+ */
+boolean rechtsMauer()
+{
+  return !rechtsFrei();
+}
+
+
+/*
+ * liefert true,
+ * falls sich eine Mauer links und rechts vom Hamster befindet
+ */
+boolean linksUndRechtsMauer()
+{
+  return linksMauer() && rechtsMauer();
+}
+
+
+/*
+ * liefert true,
+ * falls sich eine Mauer links oder rechts vom Hamster befindet,
+ * aber nicht links und rechts
+ */
+boolean entwederLinksOderRechtsMauer()
+{
+  linksUm();
+  boolean linksMauer = !vornFrei();
+  kehrt();
+  boolean rechtsMauer = !vornFrei();
+  linksUm();
+  return !(linksMauer && rechtsMauer) && (linksMauer || rechtsMauer);
+}
+
+
+/*
+ * liefert true,
+ * falls sich eine Mauer hinter vom Hamster befindet
+ */
+boolean hintenMauer()
+{
+  return !hintenFrei();
+}
+
+
+/*
+ * der Hamster klettert eine Stufe eines Bergs hinauf
+ */
+void klettereStufeHinauf()
+{
+  linksUm();
+  sicheresVor();
+  rechtsUm();
+  sicheresVor();
+}
+
+
+/*
+ * der Hamster klettert eine Stufe eines Bergs hinunter
+ */
+void klettereStufeHinunter()
+{
+  sicheresVor();
+  rechtsUm();
+  sicheresVor();
+  linksUm();
+}
+
+
+/*
+ * liefert true,
+ * falls der Hamster den Gipfel eines Bergs erreicht hat
+ */
+boolean gipfelErreicht()
+{
+  return vornFrei();
+}
+
+
+/*
+ * der Hamster klettert bis zum Gipfel eines Bergs
+ */
+void erklimmeGipfel()
+{
+  while (!gipfelErreicht())
+  {
+    klettereStufeHinauf();
+  }
+}
+
+
+/*
+ * liefert die Anzahl der Stufen,
+ * wenn der Hamster bis zum Gipfel eines Bergs klettert
+ */
+int erklimmeGipfelUndZaehleStufen()
+{
+  int stufen = 0;
+  while (!gipfelErreicht())
+  {
+    klettereStufeHinauf();
+    stufen++;
+  }
+  return stufen;
+}
+
+
+/*
+ * der Hamster übersteigt einen Berg;
+ * rekursiver Aufruf
+ */
+void uebersteigeBerg()
+{
+  if (!gipfelErreicht())
+  {
+    klettereStufeHinauf();
+    uebersteigeBerg(); // rekursiver Aufruf
+    klettereStufeHinunter();
+  }
+}

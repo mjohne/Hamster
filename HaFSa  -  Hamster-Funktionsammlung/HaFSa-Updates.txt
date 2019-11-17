@@ -1,0 +1,66 @@
+
+Updates von HaFSa
+=================
+
+
+ HaFSa-200811062304
+ ------------------
+  * Hinzufügung folgender Funktionen:
+    - laufeDiagonalLinksRechtsBisKorn()
+    - laufeDiagonalRechtsLinksBisKorn()
+    - laufeDiagonalLinksRechtsBisKornUndZaehleSchritte()
+    - laufeDiagonalRechtsLinksBisKornUndZaehleSchritte()
+    - laufeDiagonalLinksRechtsBisWand()
+    - laufeDiagonalRechtsLinksBisWand()
+    - laufeDiagonalLinksRechtsBisWandUndZaehleSchritte()
+    - laufeDiagonalRechtsLinksBisWandUndZaehleSchritte()
+
+
+ HaFSa-200811062304
+ ------------------
+  * Korrektur von Unicode-Zeichen
+
+
+ HaFSa-200811052207
+ ------------------
+  * Erweiterung folgender Funktionen:
+    - begibDichInDieLinkeEcke();
+    - begibDichInDieRechteEcke();
+
+
+ HaFSa-200811021046
+ ------------------
+  * Löschung folgender Funktionen:
+    - begibDichInDieEcke()
+    - begibDichInDieEckeUndZaehleSchritte()
+  * Hinzufügung folgender Funktionen:
+    - begibDichInDieLinkeEcke()
+    - begibDichInDieRechteEcke()
+    - begibDichInDieLinkeEckeUndZaehleSchritte()
+    - begibDichInDieRechteEckeUndZaehleSchritte()
+  * Korrektur folgender Funktionen:
+    - sucheKornUndNimm()
+
+
+ HaFSa-200811020033
+ ------------------
+  * Korrektur diverser Funktionen:
+    - klettereStufeHinunter()
+    - linksWenden()
+    - rechtsWenden()
+    - ernteReihe()
+    - ernteReiheUndZaehleSchritte()
+  * Hinzufügung folgender Funktionen:
+    - nimmAlleKoerner()
+    - sucheKoernerUndNimm()
+    - sucheKoernerUndNimmUndZaehleSchritte()
+
+
+ HaFSa-200811020033
+ ------------------
+  * Korrektur von Tippfehler einiger Kommentare
+
+
+ HaFSa-200810292221
+ ------------------
+  * Entwicklung von HaFSa
